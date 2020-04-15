@@ -20,12 +20,12 @@ class YelpRecyclerAdapter(private val reviews: ArrayList<YelpReview>) : Recycler
 
     override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
         val currentYelpReview = reviews[position]
-        holder.businessName.text = currentYelpReview.businessName
-        holder.reviewCount.text = currentYelpReview.reviewCount.toString()
-        holder.ratingBar.rating = currentYelpReview.rating
-        holder.distance.text = currentYelpReview.distance
-        holder.address.text = currentYelpReview.address
-        holder.category.text = currentYelpReview.category
+        holder.businessName.text = currentYelpReview.name
+        holder.reviewCount.text = currentYelpReview.review_count.toString()
+        holder.ratingBar.rating = currentYelpReview.rating.toFloat()
+        holder.distance.text = convertToMiles(currentYelpReview.distance).toString()
+        holder.address.text = "${currentYelpReview.location.display_address[0]}, ${currentYelpReview.location.display_address[1]}"
+        holder.category.text = currentYelpReview.categories[0].title
         // use Picasso to load image url
         holder.image.setImageResource(R.drawable.ic_launcher_foreground)
         holder.price.text  = currentYelpReview.price
@@ -33,6 +33,10 @@ class YelpRecyclerAdapter(private val reviews: ArrayList<YelpReview>) : Recycler
 
     override fun getItemCount(): Int {
         return reviews.size
+    }
+
+    private fun convertToMiles(distance: Double): Double {
+        return distance / 1609.344 // magic number. yay conversions!
     }
 
     // provides reference to the views
