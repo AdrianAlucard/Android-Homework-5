@@ -1,16 +1,23 @@
 package com.example.hw5_yelpclone
 
+import android.content.Context
 import android.os.Bundle
 import android.util.Log
 import android.view.View
+import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import kotlinx.android.synthetic.main.activity_main.*
+import okhttp3.Interceptor
+import okhttp3.OkHttpClient
+import okhttp3.Request
+import okhttp3.Response
 import retrofit2.Call
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+import java.io.IOException
 
 
 class MainActivity : AppCompatActivity() {
@@ -20,7 +27,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var yelpApi: YelpService
 
     private val token =
-        "<insert api key here>"
+        "<Insert Token Here>"
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -30,7 +37,18 @@ class MainActivity : AppCompatActivity() {
         yelp_recycler_view.adapter = adapter
         yelp_recycler_view.layoutManager = LinearLayoutManager(this)
 
+        val client = OkHttpClient.Builder().addInterceptor(object : Interceptor {
+            @Throws(IOException::class)
+            override fun intercept(chain: Interceptor.Chain): Response? {
+                val newRequest: Request = chain.request().newBuilder()
+                    .addHeader("Authorization", "Bearer $token")
+                    .build()
+                return chain.proceed(newRequest)
+            }
+        }).build()
+
         val retrofit = Retrofit.Builder()
+            .client(client)
             .baseUrl(BASE_URL)
             .addConverterFactory(GsonConverterFactory.create())
             .build()
@@ -43,7 +61,7 @@ class MainActivity : AppCompatActivity() {
         val locationSearch = location_search.text.toString()
 
         if(isInputValid(foodItem, locationSearch)) {
-            yelpApi.SearchYelp(foodItem, locationSearch, "Bearer $token")
+            yelpApi.SearchYelp(foodItem, locationSearch)
                 .enqueue(object : retrofit2.Callback<YelpResults> {
                     override fun onFailure(call: Call<YelpResults>, t: Throwable) {
                         Log.d(TAG, "onFailure : $t")
@@ -72,6 +90,7 @@ class MainActivity : AppCompatActivity() {
                     }
 
                 })
+            view.hideKeyboard();
         }
     }
 
@@ -100,5 +119,10 @@ class MainActivity : AppCompatActivity() {
 
         builder.create().show()
         return false
+    }
+
+    fun View.hideKeyboard() {
+        val imm = context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+        imm.hideSoftInputFromWindow(windowToken, 0)
     }
 }

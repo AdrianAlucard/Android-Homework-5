@@ -8,15 +8,15 @@ import retrofit2.http.Query
 interface YelpService {
 
     @GET("businesses/search")
-    fun SearchYelp(@Query("term") searchTerm: String, @Query("location") location: String, @Header("Authorization") header: String): Call<YelpResults>
+    fun SearchYelp(@Query("term") searchTerm: String, @Query("location") location: String): Call<YelpResults>
 
     @GET("businesses/search")
-    fun SearchYelp(@Query("term") searchTerm: String, @Query("location") location: String, @Query("radius") radius: Int, @Header("Authorization") header: String): Call<YelpResults>
+    fun SearchYelp(@Query("term") searchTerm: String, @Query("location") location: String, @Query("radius") radius: Int): Call<YelpResults>
 
     @GET("businesses/search")
-    fun SearchYelp(@Query("term") searchTerm: String, @Query("location") location: String, @Query("sort_by") sortBy: String, @Header("Authorization") header: String): Call<YelpResults>
+    fun SearchYelp(@Query("term") searchTerm: String, @Query("location") location: String, @Query("sort_by") sortBy: String): Call<YelpResults>
 
     @GET("businesses/search")
-    fun SearchYelp(@Query("term") searchTerm: String, @Query("location") location: String, @Query("sort_by") sortBy: String, @Query("sort_by") radius: Int, @Header("Authorization") header: String): Call<YelpResults>
+    fun SearchYelp(@Query("term") searchTerm: String, @Query("location") location: String, @Query("sort_by") sortBy: String, @Query("sort_by") radius: Int): Call<YelpResults>
 
 }
