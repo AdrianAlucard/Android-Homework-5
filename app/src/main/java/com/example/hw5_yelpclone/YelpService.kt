@@ -11,12 +11,8 @@ interface YelpService {
     fun SearchYelp(@Query("term") searchTerm: String, @Query("location") location: String): Call<YelpResults>
 
     @GET("businesses/search")
-    fun SearchYelp(@Query("term") searchTerm: String, @Query("location") location: String, @Query("radius") radius: Int): Call<YelpResults>
-
-    @GET("businesses/search")
-    fun SearchYelp(@Query("term") searchTerm: String, @Query("location") location: String, @Query("sort_by") sortBy: String): Call<YelpResults>
-
-    @GET("businesses/search")
-    fun SearchYelp(@Query("term") searchTerm: String, @Query("location") location: String, @Query("sort_by") sortBy: String, @Query("sort_by") radius: Int): Call<YelpResults>
-
+    fun SearchYelp(@Query("term") searchTerm: String,
+                   @Query("latitude") lat: Double,
+                   @Query("longitude") long: Double,
+                   @Query("radius") radius: Int): Call<YelpResults>
 }
