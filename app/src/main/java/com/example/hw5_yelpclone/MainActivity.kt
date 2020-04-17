@@ -91,10 +91,14 @@ class MainActivity : AppCompatActivity() {
                 ActivityCompat.requestPermissions(this,permissions, 0)
             } else {
                 val location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER)
-                Log.d(TAG, "lat: ${location.latitude} long: ${location.longitude}")
-                // radius about 10 miles
-                yelpApi.SearchYelp(foodItem, location.latitude, location.longitude,16093)
-                    .enqueue(yelpCallback())
+                if(location != null) {
+                    Log.d(TAG, "lat: ${location.latitude} long: ${location.longitude}")
+                    // radius about 10 miles
+                    yelpApi.SearchYelp(foodItem, location.latitude, location.longitude,16093)
+                        .enqueue(yelpCallback())
+                } else {
+                    showDialog("GPS Issue", "Unable to fetch your location for this feature")
+                }
                 view.hideKeyboard();
             }
         }
